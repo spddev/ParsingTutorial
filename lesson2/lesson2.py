@@ -2,7 +2,8 @@
 
 import requests
 from bs4 import BeautifulSoup
-
+import json
+import csv
 # url = "http://www.health-diet.ru/table_calorie"
 #
 # headers = {
@@ -30,3 +31,6 @@ for item in all_products_hrefs:
 
     all_categories_dict[item_text] = item_href
     # print(all_categories_dict)
+# Сохранение данных в JSON-файл
+with open("all_categories_dict.json", "w", encoding="utf-8") as file:
+    json.dump(all_categories_dict, file, indent=4, ensure_ascii=False)
