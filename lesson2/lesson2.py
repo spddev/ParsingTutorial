@@ -37,7 +37,7 @@ soup = BeautifulSoup(src, "lxml")
 
 with open("all_categories_dict.json", encoding="utf-8") as file:
     all_categories = json.load(file)
-
+count = 0
 for category_name, category_href in all_categories.items():
     #Список символов на замену
     rep = [",", " ", "-", "'"]
@@ -49,3 +49,31 @@ for category_name, category_href in all_categories.items():
     req = requests.get(url=category_href, headers=headers)
     src = req.text
 
+    with open(f"data/{count}_{category_name}.html", "w", encoding="utf-8") as file:
+        file.write(src)
+
+    with open(f"data/{count}_{category_name}.html", encoding="utf-8") as file:
+        src = file.read()
+
+    soup = BeautifulSoup(src, "lxml")
+
+    # собираем заголовки таблицы
+    table_head = soup.find(class_="mzr-tc-group-table").find("tr").find_all("th")
+    product = table_head[0].text
+    calories = table_head[1].text
+    proteins = table_head[2].text
+    fats = table_head[3].text
+    carbohydrates = table_head[4].text
+    # print(carbohydrates)
+
+    with open(f"data/{count}_{category_name}.csv", "w", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            (
+              product,
+              calories,
+              proteins,
+              fats,
+              carbohydrates
+            )
+        )
